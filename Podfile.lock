@@ -1,0 +1,30 @@
+PODS:
+  - ALProgressView (2.0.0)
+  - IQKeyboardManagerSwift (6.5.11)
+  - Realm (10.25.1):
+    - Realm/Headers (= 10.25.1)
+  - Realm/Headers (10.25.1)
+  - RealmSwift (10.25.1):
+    - Realm (= 10.25.1)
+
+DEPENDENCIES:
+  - ALProgressView
+  - IQKeyboardManagerSwift
+  - RealmSwift (= 10.25.1)
+
+SPEC REPOS:
+  trunk:
+    - ALProgressView
+    - IQKeyboardManagerSwift
+    - Realm
+    - RealmSwift
+
+SPEC CHECKSUMS:
+  ALProgressView: 547883405970e932d8f1f12b605aa4f6df08f155
+  IQKeyboardManagerSwift: c7955c0bdbf7b2eb29bb7daaa44e3d90f55a9a85
+  Realm: 1a6e9b4f6983711655d8c0bcb6d2d29c3afbb1f3
+  RealmSwift: e72669550d27082aa4fad5d176f5076cfe806245
+
+PODFILE CHECKSUM: 46f14a36cc1b213d8f3adc89f964187cea5feaf3
+
+COCOAPODS: 1.11.3
