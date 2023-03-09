@@ -24,9 +24,12 @@ class HomeViewController: BaseViewController {
         tasks = realm.objects(Task.self)
         token = tasks.observe { [weak self] (changes) in
             guard let `self` = self else {return}
+            
             switch changes {
             case .initial:
                 break
+                // results are now populated and can be accessed without blocking the UI
+                
             case .update(_, let deletions, let insertions, let modifications):
                 // Quiery results have changed
                 print("Deleted indices: ", deletions)
@@ -64,10 +67,13 @@ class HomeViewController: BaseViewController {
         tableView.backgroundColor = UIColor.clear
         tableView.register(TaskViewCell.self, forCellReuseIdentifier: "taskCellId")
         tableView.register(HistoryViewCell.self, forCellReuseIdentifier: "historyCellId")
-        tableView.showsVerticalScrollIndicator = false
     }
     
+    // MARK: - Helpers
+    
     func unfinishedTask() -> [Task] {
+        return Array(tasks)
+        
         let filteredTasks = tasks.filter { task in
             return task.start == nil || task.finish == nil
         }
@@ -75,17 +81,21 @@ class HomeViewController: BaseViewController {
     }
     
     func finishedTask() -> [Task] {
+        return Array(tasks)
+        
         let filteredTasks = tasks.filter { task in
             return task.start != nil && task.finish != nil
         }
             .sorted { $0.finish! > $1.finish! }
-        
         return Array(filteredTasks)
     }
     
-    
+    func duplicateTask(_ task: Task) {
+        
+    }
 }
 
+// MARK: - UITableViewDataSource
 extension HomeViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
@@ -94,7 +104,8 @@ extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return unfinishedTask().count
-        }else {
+        }
+        else {
             return finishedTask().count
         }
     }
@@ -104,38 +115,51 @@ extension HomeViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "taskCellId", for: indexPath) as! TaskViewCell
             
             let task = unfinishedTask()[indexPath.row]
-            let tag = task.tagType
-            cell.timeLabel.text = "00:32:10"
-            cell.categoryButton.setTitle(tag?.name, for: .normal)
-            cell.categoryButton.setTitleColor(tag?.titleColor, for: .normal)
-            cell.categoryButton.layer.borderColor = tag?.titleColor.cgColor
+            if let start = task.start {
+                cell.timeLabel.text = Date().timeIntervalSince(start).durationString
+            }
+            else {
+                cell.timeLabel.text = "00:00:00"
+            }
+            cell.categoryType = task.categoryType
+            cell.tagType = task.tagType
             cell.nameLabel.text = task.title
             
             return cell
-        }else {
+        }
+        else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "historyCellId", for: indexPath) as! HistoryViewCell
             
             let task = finishedTask()[indexPath.row]
             let category = task.categoryType
             cell.iconImageView.image = category?.icon
-            cell.nameLabel.text = category?.name
-            cell.timeLabel.text = "00:32:10"
+            cell.nameLabel.text = task.title
+            if let finish = task.finish, let start = task.start {
+                cell.timeLabel.text = finish.timeIntervalSince(start).durationString
+            }
+            else {
+                cell.timeLabel.text = "00:00:00"
+            }
+            cell.categoryType = task.categoryType
+            cell.tagType = task.tagType
+            
+            cell.delegate = self
             
             return cell
         }
-        
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 {
             return nil
-        }else {
+        }
+        else {
             let view = UIView(frame: .zero)
             view.backgroundColor = UIColor.clear
             
             let label = UILabel(frame: .zero)
             label.font = UIFont.systemFont(ofSize: 24, weight: .medium)
-            label.text = "Task"
+            label.text = "Today"
             
             view.addSubview(label)
             label.translatesAutoresizingMaskIntoConstraints = false
@@ -143,6 +167,7 @@ extension HomeViewController: UITableViewDataSource {
                 label.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
                 label.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16)
             ])
+            
             return view
         }
     }
@@ -150,15 +175,37 @@ extension HomeViewController: UITableViewDataSource {
 }
 
 extension HomeViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 0 {
+            let task = unfinishedTask()[indexPath.row]
+//            presentTaskViewController(task: task)
+        }
+        else {
+            
+        }
+    }
+    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
             return 0.0001
-        }else {
+        }
+        else {
             return 56
         }
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 0.0001
+    }
+}
+
+// MARK: - HistoryViewCellDelegate
+extension HomeViewController: HistoryViewCellDelegate {
+    func historyViewCellPlayButtonTapped(_ cell: HistoryViewCell) {
+        if let indexPath = tableView.indexPath(for: cell) {
+            let task = finishedTask()[indexPath.row]
+            duplicateTask(task)
+        }
     }
 }

@@ -7,13 +7,27 @@
 
 import UIKit
 
+protocol HistoryViewCellDelegate: NSObjectProtocol {
+    func historyViewCellPlayButtonTapped(_ cell: HistoryViewCell)
+}
+
 class HistoryViewCell: UITableViewCell {
     weak var containerView: UIView!
     weak var iconImageView: UIImageView!
     weak var nameLabel: UILabel!
     weak var timeLabel: UILabel!
-    weak var stackView: UIStackView!
+    weak var categoryStackView: UIStackView!
     weak var playButton: UIButton!
+    
+    weak var delegate: HistoryViewCellDelegate?
+    
+    var tagType: Tag? {
+        didSet { setupCategories() }
+    }
+    
+    var categoryType: Category? {
+        didSet { setupCategories() }
+    }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -91,35 +105,20 @@ class HistoryViewCell: UITableViewCell {
         timeLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         timeLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         timeLabel.font = UIFont.systemFont(ofSize: 12, weight: .regular)
-        timeLabel.textColor = UIColor.systemGray
         
-        let stackView = UIStackView()
-        containerView.addSubview(stackView)
-        self.stackView = stackView
-        stackView.axis = .horizontal
-        stackView.distribution = .fill
-        stackView.alignment = .fill
-        stackView.spacing = 8
-        stackView.translatesAutoresizingMaskIntoConstraints = false
+        let categoryStackView = UIStackView()
+        containerView.addSubview(categoryStackView)
+        self.categoryStackView = categoryStackView
+        categoryStackView.axis = .horizontal
+        categoryStackView.distribution = .fill
+        categoryStackView.alignment = .fill
+        categoryStackView.spacing = 8
+        categoryStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 16),
-            stackView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
-            stackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16)
+            categoryStackView.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 16),
+            categoryStackView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
+            categoryStackView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16)
         ])
-        
-        
-        
-        let categoryButton = UIButton(type: .system)
-        stackView.addArrangedSubview(categoryButton)
-        categoryButton.translatesAutoresizingMaskIntoConstraints = false
-        categoryButton.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .regular)
-        categoryButton.contentEdgeInsets = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
-        categoryButton.isUserInteractionEnabled = false
-        categoryButton.layer.cornerRadius = 6
-        categoryButton.layer.masksToBounds = true
-        categoryButton.tintColor = UIColor(rgb: 0xFD5B71)
-        categoryButton.backgroundColor = UIColor(rgb: 0xFFEFF1)
-        categoryButton.setTitle("Work", for: .normal)
         
         let playButton = UIButton(type: .system)
         containerView.addSubview(playButton)
@@ -128,12 +127,13 @@ class HistoryViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             playButton.widthAnchor.constraint(equalToConstant: 24),
             playButton.heightAnchor.constraint(equalToConstant: 24),
-            playButton.leadingAnchor.constraint(greaterThanOrEqualTo: stackView.trailingAnchor, constant: 16),
+            playButton.leadingAnchor.constraint(greaterThanOrEqualTo: categoryStackView.trailingAnchor, constant: 16),
             playButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            playButton.centerYAnchor.constraint(equalTo: stackView.centerYAnchor)
+            playButton.centerYAnchor.constraint(equalTo: categoryStackView.centerYAnchor)
         ])
         playButton.setImage(UIImage(named: "btn_play")?.withRenderingMode(.alwaysOriginal), for: .normal)
         playButton.setTitle(nil, for: .normal)
+        playButton.addTarget(self, action: #selector(self.playButtonTapped(_:)), for: .touchUpInside)
 
         setupColor()
     }
@@ -145,9 +145,49 @@ class HistoryViewCell: UITableViewCell {
             let isDark = traitCollection.userInterfaceStyle == .dark
            containerView.backgroundColor = isDark ? UIColor.cellBackgroundDark : UIColor.cellBackgroundLight
             timeLabel.textColor = isDark ? UIColor.textGrayDark : UIColor.textGrayLight
-        } else {
+        }
+        else {
             // Fallback on earlier versions
             containerView.backgroundColor = UIColor.cellBackgroundLight
         }
     }
+    
+    @objc func playButtonTapped(_ sender: Any) {
+        delegate?.historyViewCellPlayButtonTapped(self)
+        
+    }
+    
+    private func setupCategories() {
+        categoryStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
+        let isDark: Bool
+        if #available(iOS 12.0, *) {
+            isDark = traitCollection.userInterfaceStyle == .dark
+        } else {
+            isDark = false
+        }
+        
+        let categoryButton = UIButton(type: .system)
+        categoryButton.setTitle(categoryType?.name, for: .normal)
+        categoryButton.setTitleColor(categoryType?.titleColor, for: .normal)
+        categoryButton.backgroundColor = isDark ? categoryType?.backgroundDarkColor : categoryType?.backgroundColor
+        categoryButton.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        categoryButton.contentEdgeInsets = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
+        categoryButton.isUserInteractionEnabled = false
+        categoryButton.layer.cornerRadius = 6
+        categoryButton.layer.masksToBounds = true
+        categoryStackView.addArrangedSubview(categoryButton)
+        
+        let tagButton = UIButton(type: .system)
+        tagButton.setTitle(tagType?.name, for: .normal)
+        tagButton.setTitleColor(tagType?.titleColor, for: .normal)
+        tagButton.backgroundColor = isDark ?
+        tagType?.backgroundDarkColor : tagType?.backgroundColor
+        tagButton.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        tagButton.contentEdgeInsets = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
+        tagButton.layer.cornerRadius = 6
+        tagButton.layer.masksToBounds = true
+        categoryStackView.addArrangedSubview(tagButton)
+    }
+    
 }

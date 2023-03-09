@@ -15,6 +15,7 @@
 		014310D92983BBB800586FFA /* TaskViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014310D82983BBB800586FFA /* TaskViewCell.swift */; };
 		014310DB2984132300586FFA /* HistoryViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 014310DA2984132300586FFA /* HistoryViewCell.swift */; };
 		0145D45029A6F8D000C3E67D /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0145D44F29A6F8D000C3E67D /* Category.swift */; };
+		016BBBB729B5837300FC0B3B /* TimeIntervalExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 016BBBB629B5837300FC0B3B /* TimeIntervalExtensions.swift */; };
 		016FDA0B29B17AF400FF97DB /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 016FDA0A29B17AF400FF97DB /* Task.swift */; };
 		01DD1A3229765685000F3E46 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01DD1A3129765685000F3E46 /* AppDelegate.swift */; };
 		01DD1A3429765685000F3E46 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01DD1A3329765685000F3E46 /* SceneDelegate.swift */; };
@@ -37,6 +38,7 @@
 		014310D82983BBB800586FFA /* TaskViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskViewCell.swift; sourceTree = "<group>"; };
 		014310DA2984132300586FFA /* HistoryViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewCell.swift; sourceTree = "<group>"; };
 		0145D44F29A6F8D000C3E67D /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		016BBBB629B5837300FC0B3B /* TimeIntervalExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervalExtensions.swift; sourceTree = "<group>"; };
 		016FDA0A29B17AF400FF97DB /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		01DD1A2E29765685000F3E46 /* TimePad.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimePad.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		01DD1A3129765685000F3E46 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 			children = (
 				01DD1A6C29766836000F3E46 /* UIColorExtensions.swift */,
 				01DD1A6E297675E4000F3E46 /* UIViewControllerExtensions.swift */,
+				016BBBB629B5837300FC0B3B /* TimeIntervalExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -325,6 +328,7 @@
 				0132DC152981181C0005120D /* BaseViewController.swift in Sources */,
 				01DD1A6829765A97000F3E46 /* HomeViewController.swift in Sources */,
 				0145D45029A6F8D000C3E67D /* Category.swift in Sources */,
+				016BBBB729B5837300FC0B3B /* TimeIntervalExtensions.swift in Sources */,
 				013D156829A84F4000C6A75F /* Tag.swift in Sources */,
 				01DD1A6A29765AA0000F3E46 /* ChartViewController.swift in Sources */,
 				01DD1A6D29766836000F3E46 /* UIColorExtensions.swift in Sources */,

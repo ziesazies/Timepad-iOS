@@ -164,7 +164,7 @@ class AddTaskViewController: BaseViewController {
             button.layer.masksToBounds = true
             button.tintColor = tag.titleColor
             if #available(iOS 12.0, *) {
-                button.backgroundColor = traitCollection.userInterfaceStyle == .dark ? tag.darkBackgroundColor : tag.backgroundColor
+                button.backgroundColor = traitCollection.userInterfaceStyle == .dark ? tag.backgroundDarkColor : tag.backgroundColor
             } else {
                 // Fallback on earlier versions
                 button.backgroundColor = tag.backgroundColor

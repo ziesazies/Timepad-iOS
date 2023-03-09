@@ -23,7 +23,7 @@ enum Tag: CaseIterable{
     var titleColor: UIColor {
         switch self {
         case .personal:
-            return UIColor(rgb: 0xBDBDBD)
+            return UIColor(rgb: 0x828282)
         case .work:
             return UIColor(rgb: 0xFD5B71)
         }
@@ -38,7 +38,7 @@ enum Tag: CaseIterable{
         }
     }
     
-    var darkBackgroundColor: UIColor {
+    var backgroundDarkColor: UIColor {
         switch self {
         case.personal:
             return UIColor(rgb: 0x3F3C4E)
