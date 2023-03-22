@@ -28,4 +28,8 @@ extension UIViewController {
         view.removeFromSuperview()
         removeFromParent()
     }
+    
+    func addCloseButton() {
+        print("addCloseButton")
+    }
 }

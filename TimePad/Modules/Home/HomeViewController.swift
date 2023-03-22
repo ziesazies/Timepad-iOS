@@ -72,8 +72,6 @@ class HomeViewController: BaseViewController {
     // MARK: - Helpers
     
     func unfinishedTask() -> [Task] {
-        return Array(tasks)
-        
         let filteredTasks = tasks.filter { task in
             return task.start == nil || task.finish == nil
         }
@@ -81,8 +79,6 @@ class HomeViewController: BaseViewController {
     }
     
     func finishedTask() -> [Task] {
-        return Array(tasks)
-        
         let filteredTasks = tasks.filter { task in
             return task.start != nil && task.finish != nil
         }
@@ -179,7 +175,7 @@ extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             let task = unfinishedTask()[indexPath.row]
-//            presentTaskViewController(task: task)
+            presentTaskViewController(task: task)
         }
         else {
             

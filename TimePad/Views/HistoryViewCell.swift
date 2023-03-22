@@ -154,7 +154,6 @@ class HistoryViewCell: UITableViewCell {
     
     @objc func playButtonTapped(_ sender: Any) {
         delegate?.historyViewCellPlayButtonTapped(self)
-        
     }
     
     private func setupCategories() {

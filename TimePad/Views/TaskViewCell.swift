@@ -151,6 +151,7 @@ class TaskViewCell: UITableViewCell {
         tagButton.setTitle(tagType?.name, for: .normal)
         tagButton.setTitleColor(tagType?.titleColor, for: .normal)
         tagButton.backgroundColor = isDark ? tagType?.backgroundDarkColor : tagType?.backgroundColor
+        tagButton.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         tagButton.contentEdgeInsets = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
         tagButton.isUserInteractionEnabled = false
         tagButton.layer.cornerRadius = 6
