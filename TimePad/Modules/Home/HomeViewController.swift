@@ -87,7 +87,15 @@ class HomeViewController: BaseViewController {
     }
     
     func duplicateTask(_ task: Task) {
+        let newTask = Task()
+        newTask.title = task.title
+        newTask.tag = task.tag
+        newTask.category = task.category
         
+        let realm = try! Realm()
+        try! realm.write {
+            realm.add(newTask)
+        }
     }
 }
 
@@ -120,6 +128,8 @@ extension HomeViewController: UITableViewDataSource {
             cell.categoryType = task.categoryType
             cell.tagType = task.tagType
             cell.nameLabel.text = task.title
+            
+            cell.delegate = self
             
             return cell
         }
@@ -182,6 +192,18 @@ extension HomeViewController: UITableViewDelegate {
         }
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let cell = cell as? TaskViewCell {
+            cell.startTimer()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let cell = cell as? TaskViewCell {
+            cell.stopTimer()
+        }
+    }
+    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
             return 0.0001
@@ -203,5 +225,19 @@ extension HomeViewController: HistoryViewCellDelegate {
             let task = finishedTask()[indexPath.row]
             duplicateTask(task)
         }
+    }
+}
+
+//MARK: - TaskViewCellDelegate
+extension HomeViewController: TaskViewCellDelegate {
+    
+    func taskViewCellTimeString(_ cell: TaskViewCell) -> String {
+        if let indexPath = tableView.indexPath(for: cell) {
+            let task = unfinishedTask()[indexPath.row]
+            if let start = task.start {
+                return Date().timeIntervalSince(start).durationString
+            }
+        }
+        return "00:00:00"
     }
 }

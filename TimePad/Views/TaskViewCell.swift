@@ -7,12 +7,20 @@
 
 import UIKit
 
+protocol TaskViewCellDelegate: NSObjectProtocol {
+    func taskViewCellTimeString(_ cell: TaskViewCell) -> String
+}
+
 class TaskViewCell: UITableViewCell {
     private weak var containerView: UIView!
     weak var timeLabel: UILabel!
     private weak var categoryStackVIew: UIStackView!
     private weak var progressImageView: UIImageView!
     weak var nameLabel: UILabel!
+    
+    weak var delegate: TaskViewCellDelegate?
+    
+    var timer: Timer?
     
     var tagType: Tag? {
         didSet { setupCategories() }
@@ -21,7 +29,11 @@ class TaskViewCell: UITableViewCell {
     var categoryType: Category? {
         didSet { setupCategories() }
     }
-
+    
+    deinit {
+        timer?.invalidate()
+    }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setup()
@@ -37,10 +49,10 @@ class TaskViewCell: UITableViewCell {
         // Initialization code
         setup()
     }
-
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
         // Configure the view for the selected state
     }
     
@@ -111,7 +123,7 @@ class TaskViewCell: UITableViewCell {
             
         ])
         nameLabel.font = UIFont.systemFont(ofSize: 16, weight: .regular)
-
+        
         setupColor()
     }
     
@@ -125,7 +137,7 @@ class TaskViewCell: UITableViewCell {
             containerView.backgroundColor = UIColor.cellBackgroundLight
         }
     }
- 
+    
     func setupCategories() {
         categoryStackVIew.arrangedSubviews.forEach { $0.removeFromSuperview() }
         
@@ -157,5 +169,20 @@ class TaskViewCell: UITableViewCell {
         tagButton.layer.cornerRadius = 6
         tagButton.layer.masksToBounds = true
         categoryStackVIew.addArrangedSubview(tagButton)
+    }
+    
+    func startTimer() {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: {[weak self] (timer) in
+            self?.updateTimerUI()
+        })
+    }
+    
+    func stopTimer() {
+        timer?.invalidate()
+    }
+    
+    func updateTimerUI() {
+        self.timeLabel.text = delegate?.taskViewCellTimeString(self) ?? "00:00:00"
     }
 }

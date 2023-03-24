@@ -17,4 +17,13 @@ extension TimeInterval {
         
         return String(format: "%0.2d:%0.2d:%0.2d", hours, minutes, seconds)
     }
+    
+    var simpleDurationString: String {
+        let ti = Int(self)
+        
+        let seconds = ti % 60
+        let minutes = (ti / 60) % 60
+        
+        return String(format: "%0.2d:%0.2d", minutes, seconds)
+    }
 }
